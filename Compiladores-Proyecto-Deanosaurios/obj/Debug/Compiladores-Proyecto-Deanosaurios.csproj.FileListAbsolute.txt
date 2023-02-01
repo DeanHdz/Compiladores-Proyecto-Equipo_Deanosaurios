@@ -1,0 +1,11 @@
+C:\Users\LePotato\Documents\GitHub\Compiladores-Proyecto-Equipo_Deanosaurios\Compiladores-Proyecto-Deanosaurios\bin\Debug\Compiladores-Proyecto-Deanosaurios.exe.config
+C:\Users\LePotato\Documents\GitHub\Compiladores-Proyecto-Equipo_Deanosaurios\Compiladores-Proyecto-Deanosaurios\bin\Debug\Compiladores-Proyecto-Deanosaurios.exe
+C:\Users\LePotato\Documents\GitHub\Compiladores-Proyecto-Equipo_Deanosaurios\Compiladores-Proyecto-Deanosaurios\bin\Debug\Compiladores-Proyecto-Deanosaurios.pdb
+C:\Users\LePotato\Documents\GitHub\Compiladores-Proyecto-Equipo_Deanosaurios\Compiladores-Proyecto-Deanosaurios\obj\Debug\Compiladores-Proyecto-Deanosaurios.csproj.AssemblyReference.cache
+C:\Users\LePotato\Documents\GitHub\Compiladores-Proyecto-Equipo_Deanosaurios\Compiladores-Proyecto-Deanosaurios\obj\Debug\Compiladores-Proyecto-Deanosaurios.csproj.SuggestedBindingRedirects.cache
+C:\Users\LePotato\Documents\GitHub\Compiladores-Proyecto-Equipo_Deanosaurios\Compiladores-Proyecto-Deanosaurios\obj\Debug\Compiladores_Proyecto_Deanosaurios.Properties.Resources.resources
+C:\Users\LePotato\Documents\GitHub\Compiladores-Proyecto-Equipo_Deanosaurios\Compiladores-Proyecto-Deanosaurios\obj\Debug\Compiladores-Proyecto-Deanosaurios.csproj.GenerateResource.cache
+C:\Users\LePotato\Documents\GitHub\Compiladores-Proyecto-Equipo_Deanosaurios\Compiladores-Proyecto-Deanosaurios\obj\Debug\Compiladores-Proyecto-Deanosaurios.csproj.CoreCompileInputs.cache
+C:\Users\LePotato\Documents\GitHub\Compiladores-Proyecto-Equipo_Deanosaurios\Compiladores-Proyecto-Deanosaurios\obj\Debug\Compiladores-Proyecto-Deanosaurios.exe
+C:\Users\LePotato\Documents\GitHub\Compiladores-Proyecto-Equipo_Deanosaurios\Compiladores-Proyecto-Deanosaurios\obj\Debug\Compiladores-Proyecto-Deanosaurios.pdb
+C:\Users\LePotato\Documents\GitHub\Compiladores-Proyecto-Equipo_Deanosaurios\Compiladores-Proyecto-Deanosaurios\obj\Debug\Compiladores_Proyecto_Deanosaurios.Form1.resources

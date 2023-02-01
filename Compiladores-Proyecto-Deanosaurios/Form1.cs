@@ -16,5 +16,10 @@ namespace Compiladores_Proyecto_Deanosaurios
         {
             InitializeComponent();
         }
+
+        private void btn_ConP_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
