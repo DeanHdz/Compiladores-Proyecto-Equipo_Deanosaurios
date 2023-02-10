@@ -63,6 +63,7 @@
             this.tb1_al.Name = "tb1_al";
             this.tb1_al.Size = new System.Drawing.Size(247, 20);
             this.tb1_al.TabIndex = 2;
+            this.tb1_al.Text = "c&o&n&t&(0|1)";
             // 
             // tb2_al
             // 
