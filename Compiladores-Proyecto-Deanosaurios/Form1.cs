@@ -37,13 +37,73 @@ namespace Compiladores_Proyecto_Deanosaurios
             //Tarea de luih -> 1.- Cambiar nombre de input a infija en todo el codigo abajo (Excepto: String input = tb1_al.Text; )
             //2.- hacer la transformacion necesaria del input a infija... EJEMPLO -> cont(0|1) -> c&o&n&t&(0|1)
 
-
-
-
             //Inicializar string que recupere el input del textbox
             String input = tb1_al.Text;
 
-            //Realizar Conversion (CONVERTIR EXPRESIONES INFIJAS EN POSFIJAS) Tarea de luih
+
+            //Conversion de Expresion regular a infija
+            String infija = "";
+
+            int i = 0; //Iterador del string input
+
+            while(i < input.Length)
+            {
+                //Case #1
+                if (input[i] == '(' || input[i] == '|')
+                {
+                    infija += input[i]; // Letra/Numero/Operador
+                }
+                else
+                {
+                    //Case #2-1
+                    if (input[i] == '[') //Intervalo iniciado
+                    {
+                        infija += '('; //Sustituir el corchete
+                        i++;//Apunta al caracter despues del corchete
+                        infija += input[i];
+                        if (input[i + 1] == '-')
+                        {
+                            for (int j = (int)input[i]; j < (int)input[i + 2]; j++)
+                            {
+                                infija += '|';
+                                infija += (Char)(j + 1);
+                            }
+                            infija += ')';
+                            i += 3; //Mover iterador apuntando al reciente ')'
+                        }
+                        else
+                        {
+                            i++;
+                            while (input[i] != ']')
+                            {
+                                infija += '|';
+                                infija += input[i];
+                                i++;
+                            }
+                            infija += ')';
+                        }
+                    }
+                    //Case #2-2
+                    else
+                    {
+                        infija += input[i];
+                    }
+
+                    if (i + 1 < input.Length)
+                    {
+                        if (input[i + 1] != '*' && input[i + 1] != '?' && input[i + 1] != '+' && input[i + 1] != '|' && input[i + 1] != ')')
+                        {
+                            infija += '&';
+                        }
+                    }
+                }
+
+                i++; //Apuntar al siguiente caracter    
+            }
+
+            textBox1.Text = infija;
+
+            //Realizar Conversion (CONVERTIR EXPRESIONES INFIJAS EN POSFIJAS)
 
             //1.Definir la prioridad del conjunto de operaciones... ke?
 
@@ -52,15 +112,15 @@ namespace Compiladores_Proyecto_Deanosaurios
 
             //3 Inicializar posfija
             String posfija = "";
-            int i = 0; //iterador del string input
+            i = 0; //iterador del string infija
 
             try
             {
-                while(i < input.Length) //Mienstras no sea fin de la expresión infija
+                while(i < infija.Length) //Mienstras no sea fin de la expresión infija
                 {
-                    switch (input[i])
+                    switch (infija[i])
                     {
-                        case '(': pila.Push(input[i]); //Insertar en la pila
+                        case '(': pila.Push(infija[i]); //Insertar en la pila
                             break;
                         case ')':
                             while (pila.Peek() != '(') // Extraer de la pila y desplegar en posfija hasta encontrar “paréntesis izquierdo” (no desplegarlo)
@@ -70,18 +130,20 @@ namespace Compiladores_Proyecto_Deanosaurios
                             _ = pila.Pop(); //No desplegar parentesis izquierdo
                             break;
                         default:
-                            if(input[i] >= 97 && input[i] <= 122 || input[i] >= 65 && input[i] <= 90 || input[i] == 'ñ' || input[i] == 'Ñ')
+                            //(Operando) Numero, minuscula, mayuscula, ñ
+                            if(infija[i] >= 48 && infija[i] <= 57 || infija[i] >= 97 && infija[i] <= 122 || infija[i] >= 65 && infija[i] <= 90 || infija[i] == 'ñ' || infija[i] == 'Ñ')
                             {
-                                posfija += input[i]; // Desplegar en posfija
+                                posfija += infija[i]; // Desplegar en posfija
                             }
+                            //Para el "verdadero" default, se asume que se tiene un operador
                             else
                             {
                                 bool band = true;
                                 while (band)
                                 {
-                                    if (pila.Count == 0 || pila.Peek() == '(' || ChecarPrioridad(pila, input[i]))
+                                    if (pila.Count == 0 || pila.Peek() == '(' || ChecarPrioridad(pila, infija[i]))
                                     {
-                                        pila.Push(input[i]); //Insertar el operador en la pila;
+                                        pila.Push(infija[i]); //Insertar el operador en la pila;
                                         band = false;
                                     }
                                     else
