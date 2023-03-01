@@ -175,7 +175,8 @@ namespace Compiladores_Proyecto_Deanosaurios
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
+            int contEpsilon = 0;
+            int contEstados = 0;
             afn.conviertePosfijaEnAFN(tb2_al.Text);
             dataGridView1.Columns.Clear();
 
@@ -195,9 +196,6 @@ namespace Compiladores_Proyecto_Deanosaurios
                 column.CellTemplate = dgvcell;
                 dataGridView1.Columns.Add(column);
 
-                /*
-                dataGridView1.Columns.Add(new DataGridViewColumn());
-                dataGridView1.Columns[dataGridView1.Columns.Count - 1].Name = s;*/
             }
             DataGridViewColumn columnEpsilon = new DataGridViewColumn();
             columnEpsilon.Name = "£";
@@ -207,6 +205,7 @@ namespace Compiladores_Proyecto_Deanosaurios
             dataGridView1.Columns.Add(columnEpsilon);
             for(int i = 0; i < afn.estados.Count; i ++)
             {
+                contEstados++;
                 DataGridViewRow r = new DataGridViewRow();
                 r.CreateCells(dataGridView1);
                 r.Cells[0].Value = afn.estados[i].nombre;
@@ -218,6 +217,7 @@ namespace Compiladores_Proyecto_Deanosaurios
                         {
                             if (t.valor == "")
                             {
+                                contEpsilon++;
                                 r.Cells[j + 1].Value = r.Cells[j + 1].Value + t.destino.nombre.ToString();
                             }
                         }
@@ -232,43 +232,11 @@ namespace Compiladores_Proyecto_Deanosaurios
                             }
                         }
                     }
-                    
-                    //foreach transiciones en el estado verifica si hay alguna que lleve el char del alfabeto y las concatena con el nombre
-                    //falta implementar el epsilon
-                    /*for (int k = 0; k < afn.estados.Count; k++)
-                    {
-                        if (afn.estados[i].transiciones[j].destino == afn.estados[k])
-                        {
-
-                        }
-                    }*/
                 }
                 dataGridView1.Rows.Add(r);
             }
-            /*
-            foreach(EDO edo in afn.estados)
-            {
-                int count = 1;
-                DataGridViewRow r = new DataGridViewRow();
-                r.CreateCells(dataGridView1);
-                r.Cells[0].Value = edo.nombre;
-                foreach (EDO eAux in afn.estados)
-                {
-                    foreach(Transicion t in edo.transiciones)
-                    {
-                        if(t)
-                            count++;
-                    }
-
-                }
-
-            }*/
-            /*r.CreateCells(dataGridView1);
-            for(int i = 0; i < afn.alfabeto.Count; i++)
-            {
-                r.Cells[i] = afn.
-            }*/
-
+            textBox2.Text = contEpsilon.ToString();
+            textBox3.Text = contEstados.ToString();
         }
     }
 }

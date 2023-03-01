@@ -9,19 +9,11 @@ namespace Compiladores_Proyecto_Deanosaurios
     internal class AFN
     {
         public List<EDO> estados = new List<EDO>();
-        public int NEstados = 0;
+       
         public List<string> alfabeto = new List<string>();
-        public String[,] tablaTransiciones;
+       
 
-        public void AFNATabla()
-        {
-            
-            tablaTransiciones = new string[estados.Count,alfabeto.Count];
-            for(int i = 0; i < estados.Count; i++)
-            {
-                tablaTransiciones[i,0] = estados[i].ToString();
-            }
-        }
+        
         /*public void agregarEDO(EDO edo)
         {
             NEstados++;
@@ -44,6 +36,8 @@ namespace Compiladores_Proyecto_Deanosaurios
 
         public void conviertePosfijaEnAFN(string posfija)
         {
+            estados.Clear();
+            alfabeto.Clear();
             if(posfija != "")
                 Thompson(posfija);
             else
@@ -62,7 +56,7 @@ namespace Compiladores_Proyecto_Deanosaurios
             EDO aux1 = new EDO(0);
             EDO aux2 = new EDO(0);
             //estados.Add(pila.Peek());
-            for (int i = 0; i < posfija.Length - 1; i++)
+            for (int i = 0; i < posfija.Length; i++)
             {
                 switch (posfija[i])
                 {
