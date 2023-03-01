@@ -12,6 +12,7 @@ namespace Compiladores_Proyecto_Deanosaurios
 {
     public partial class Form1 : Form
     {
+        AFN afn = new AFN();
         public Form1()
         {
             InitializeComponent();
@@ -164,6 +165,110 @@ namespace Compiladores_Proyecto_Deanosaurios
 
             //Retornar output string a tb2_al
             tb2_al.Text = posfija;
+
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            
+            afn.conviertePosfijaEnAFN(tb2_al.Text);
+            dataGridView1.Columns.Clear();
+
+            DataGridViewColumn columnEDO = new DataGridViewColumn();
+            columnEDO.Name = "EDO";
+            columnEDO.HeaderText = "EDO";
+            DataGridViewCell dgvcell1 = new DataGridViewTextBoxCell();
+            columnEDO.CellTemplate = dgvcell1;
+            dataGridView1.Columns.Add(columnEDO);
+
+            foreach (string s in afn.alfabeto)
+            {
+                DataGridViewColumn column = new DataGridViewColumn();
+                column.Name = s;
+                column.HeaderText = s;
+                DataGridViewCell dgvcell = new DataGridViewTextBoxCell();
+                column.CellTemplate = dgvcell;
+                dataGridView1.Columns.Add(column);
+
+                /*
+                dataGridView1.Columns.Add(new DataGridViewColumn());
+                dataGridView1.Columns[dataGridView1.Columns.Count - 1].Name = s;*/
+            }
+            DataGridViewColumn columnEpsilon = new DataGridViewColumn();
+            columnEpsilon.Name = "£";
+            columnEpsilon.HeaderText = "£";
+            DataGridViewCell dgvcellEpsilon = new DataGridViewTextBoxCell();
+            columnEpsilon.CellTemplate = dgvcellEpsilon;
+            dataGridView1.Columns.Add(columnEpsilon);
+            for(int i = 0; i < afn.estados.Count; i ++)
+            {
+                DataGridViewRow r = new DataGridViewRow();
+                r.CreateCells(dataGridView1);
+                r.Cells[0].Value = afn.estados[i].nombre;
+                for (int j = 0; j <= afn.alfabeto.Count; j++)
+                {
+                    if(j == afn.alfabeto.Count)
+                    {
+                        foreach (Transicion t in afn.estados[i].transiciones)
+                        {
+                            if (t.valor == "")
+                            {
+                                r.Cells[j + 1].Value = r.Cells[j + 1].Value + t.destino.nombre.ToString();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (Transicion t in afn.estados[i].transiciones)
+                        {
+                            if (t.valor == afn.alfabeto[j])
+                            {
+                                r.Cells[j + 1].Value = r.Cells[j + 1].Value + t.destino.nombre.ToString();
+                            }
+                        }
+                    }
+                    
+                    //foreach transiciones en el estado verifica si hay alguna que lleve el char del alfabeto y las concatena con el nombre
+                    //falta implementar el epsilon
+                    /*for (int k = 0; k < afn.estados.Count; k++)
+                    {
+                        if (afn.estados[i].transiciones[j].destino == afn.estados[k])
+                        {
+
+                        }
+                    }*/
+                }
+                dataGridView1.Rows.Add(r);
+            }
+            /*
+            foreach(EDO edo in afn.estados)
+            {
+                int count = 1;
+                DataGridViewRow r = new DataGridViewRow();
+                r.CreateCells(dataGridView1);
+                r.Cells[0].Value = edo.nombre;
+                foreach (EDO eAux in afn.estados)
+                {
+                    foreach(Transicion t in edo.transiciones)
+                    {
+                        if(t)
+                            count++;
+                    }
+
+                }
+
+            }*/
+            /*r.CreateCells(dataGridView1);
+            for(int i = 0; i < afn.alfabeto.Count; i++)
+            {
+                r.Cells[i] = afn.
+            }*/
+
         }
     }
 }
