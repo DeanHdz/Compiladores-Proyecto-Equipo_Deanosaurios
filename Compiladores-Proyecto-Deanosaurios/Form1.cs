@@ -218,7 +218,7 @@ namespace Compiladores_Proyecto_Deanosaurios
                             if (t.valor == "")
                             {
                                 contEpsilon++;
-                                r.Cells[j + 1].Value = r.Cells[j + 1].Value + t.destino.nombre.ToString();
+                                r.Cells[j + 1].Value = r.Cells[j + 1].Value + " " + t.destino.nombre.ToString();
                             }
                         }
                     }
@@ -228,7 +228,7 @@ namespace Compiladores_Proyecto_Deanosaurios
                         {
                             if (t.valor == afn.alfabeto[j])
                             {
-                                r.Cells[j + 1].Value = r.Cells[j + 1].Value + t.destino.nombre.ToString();
+                                r.Cells[j + 1].Value = r.Cells[j + 1].Value + " " + t.destino.nombre.ToString();
                             }
                         }
                     }

@@ -11,7 +11,8 @@ namespace Compiladores_Proyecto_Deanosaurios
         public List<EDO> estados = new List<EDO>();
        
         public List<string> alfabeto = new List<string>();
-       
+        
+        public int contEps = 0;
 
         
         /*public void agregarEDO(EDO edo)
@@ -72,6 +73,7 @@ namespace Compiladores_Proyecto_Deanosaurios
                         aux2.setEDOaceptacion(true);
                         cont++;
                         auxAFN.estados[auxAFN.estados.Count - 1].setEDOaceptacion(false); //quita el ultimo estado de aceptacion del AFN anterior
+                        
                         aux1.agregarTransicion(new Transicion(auxAFN.estados[0], ""));//agrega un estado a la izquierda con transicion epsilon al primer estado del AFN anterior
                         auxAFN.estados[auxAFN.estados.Count - 1].agregarTransicion(new Transicion(aux2,""));//agrega la transicion al estado de aceptacion final
                         aux1.agregarTransicion(new Transicion(aux2,""));//agrega una transicion del estado inicial al final por ser *
