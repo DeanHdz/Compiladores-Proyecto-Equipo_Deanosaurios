@@ -174,8 +174,11 @@ namespace Compiladores_Proyecto_Deanosaurios
                         auxAFN3 = pilaAFN.Pop();
                         auxAFN2 = pilaAFN.Pop();
                         auxAFN2.estados[auxAFN2.estados.Count - 1].setEDOaceptacion(false);
-
-                        auxAFN2.estados[auxAFN2.estados.Count - 1].agregarTransicion(new Transicion(auxAFN3.estados[1], auxAFN3.estados[0].transiciones[0].valor));
+                        foreach(Transicion t in auxAFN3.estados[0].transiciones)
+                        {
+                            auxAFN2.estados[auxAFN2.estados.Count -1].transiciones.Add(t);
+                        }
+                        //auxAFN2.estados[auxAFN2.estados.Count - 1].agregarTransicion(new Transicion(auxAFN3.estados[1], auxAFN3.estados[0].transiciones[0].valor));
                         auxAFN3.estados.Remove(auxAFN3.estados[0]);
                         foreach (EDO edo in auxAFN2.estados)
                         {
