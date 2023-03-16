@@ -13,6 +13,7 @@ namespace Compiladores_Proyecto_Deanosaurios
     public partial class Form1 : Form
     {
         AFN afn = new AFN();
+        AFD afd = new AFD();
         public Form1()
         {
             InitializeComponent();
@@ -237,6 +238,71 @@ namespace Compiladores_Proyecto_Deanosaurios
             }
             textBox2.Text = contEpsilon.ToString();
             textBox3.Text = contEstados.ToString();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            afd.construyeAFD(afn);
+            textBox5.Text = "";
+            textBox6.Text = "";
+            dataGridView2.Columns.Clear();
+
+            DataGridViewColumn columnEDO = new DataGridViewColumn();
+            columnEDO.Name = "EDO";
+            columnEDO.HeaderText = "EDO";
+            DataGridViewCell dgvcell1 = new DataGridViewTextBoxCell();
+            columnEDO.CellTemplate = dgvcell1;
+            dataGridView2.Columns.Add(columnEDO);
+
+            foreach (string s in afn.alfabeto)
+            {
+                DataGridViewColumn column = new DataGridViewColumn();
+                column.Name = s;
+                column.HeaderText = s;
+                DataGridViewCell dgvcell = new DataGridViewTextBoxCell();
+                column.CellTemplate = dgvcell;
+                dataGridView2.Columns.Add(column);
+            }
+            int contadorDestados = 0;
+            for (int i = 0; i < afd.dEstados.Count; i++)
+            {
+                if(afd.dEstados[i].estadoAceptacion)
+                {
+                    textBox5.Text += afd.dEstados[i].name + " ";
+                }
+                if (afd.dEstados[i].estados.Contains(afn.estados[afn.estados.Count - 1]))
+                {
+                    textBox6.Text += afd.dEstados[i].name + " ";
+                }
+                contadorDestados++;
+                DataGridViewRow r = new DataGridViewRow();
+                r.CreateCells(dataGridView2);
+                r.Cells[0].Value = afd.dEstados[i].name;
+                for (int j = 0; j < afd.alfabeto.Count; j++)
+                {
+                    
+                        foreach (TransicionDestado t in afd.dEstados[i].transiciones)
+                        {
+                            if (t.valor == afn.alfabeto[j])
+                            {
+                                r.Cells[j + 1].Value = r.Cells[j + 1].Value + " " + t.destino.name.ToString();
+                            }
+                        }
+                    
+                }
+                dataGridView2.Rows.Add(r);
+            }
+            textBox4.Text = contadorDestados.ToString();
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

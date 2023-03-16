@@ -26,5 +26,6 @@ namespace Compiladores_Proyecto_Deanosaurios
         {
            estadoAceptacion = aceptacion;
         }
+
     }
 }

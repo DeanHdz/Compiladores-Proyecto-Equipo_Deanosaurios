@@ -178,12 +178,21 @@ namespace Compiladores_Proyecto_Deanosaurios
                         {
                             auxAFN2.estados[auxAFN2.estados.Count -1].transiciones.Add(t);
                         }
-                        //auxAFN2.estados[auxAFN2.estados.Count - 1].agregarTransicion(new Transicion(auxAFN3.estados[1], auxAFN3.estados[0].transiciones[0].valor));
-                        auxAFN3.estados.Remove(auxAFN3.estados[0]);
+                        foreach (EDO edo in auxAFN3.estados)
+                        {
+                            foreach (Transicion t in edo.transiciones)
+                            {
+                                if (t.destino == auxAFN3.estados[0])
+                                {
+                                    t.destino = auxAFN2.estados[auxAFN2.estados.Count - 1];
+                                }
+                            }
+                        }
                         foreach (EDO edo in auxAFN2.estados)
                         {
                             auxAFN.estados.Add(edo);
                         }
+                        auxAFN3.estados.Remove(auxAFN3.estados[0]);
                         foreach (EDO edo in auxAFN3.estados)
                         {
                             auxAFN.estados.Add(edo);
