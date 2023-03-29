@@ -30,46 +30,38 @@ namespace Compiladores_Proyecto_Deanosaurios
             while (hayDestadosSinVisitar())
             {
                 dEstados[contAux].visited = true;
-                foreach(String s in alfabeto)
+                for(int s = 0; s < alfabeto.Count(); s++)
                 {
-                        U = cerraduraEpsilon(mover(dEstados[contAux], s));
-                        if (!estaEnDestados(U) && U.estados.Count() != 0)
+                    U = cerraduraEpsilon(mover(dEstados[contAux], alfabeto[s]));
+                    if (!estaEnDestados(U) && U.estados.Count() != 0)
+                    {
+                        dEstados[contAux].transiciones.Add(new TransicionDestado(U, alfabeto[s]));
+                        dEstados.Add(U);
+                        cont++;
+                    }
+                    else
+                    {
+                        if (estaEnDestados(U))
                         {
-                            dEstados[contAux].transiciones.Add(new TransicionDestado(U, s));
-                            dEstados.Add(U);
-                            cont++;
-                        }
-                        else
-                        {
-                            if (estaEnDestados(U))
+                            for(int i = 0; i < dEstados.Count(); i++)
                             {
-                                foreach (DEstado d in dEstados)
+                                if (compararDestados(dEstados[i], U))
                                 {
-                                    if (U.estados == d.estados)
-                                    {
-                                        dEstados[contAux].transiciones.Add(new TransicionDestado(d, s));
-                                    }
+                                    dEstados[contAux].transiciones.Add((new TransicionDestado(dEstados[i], alfabeto[s])));
                                 }
                             }
                         }
-                    
-                    
+                    }
                 }
                 contAux++;
             }
-            foreach(EDO e in afn.estados)
+            foreach(DEstado d in dEstados)
             {
-                if (e.estadoAceptacion)
+                foreach(EDO e in d.estados)
                 {
-                    foreach(DEstado d in dEstados)
+                    if(e == afn.estados[afn.estados.Count() - 1])
                     {
-                        foreach(EDO e2 in d.estados)
-                        {
-                            if(e == e2)
-                            {
-                                d.setEDOaceptacion(true);
-                            }
-                        }
+                        d.setEDOaceptacion(true);
                     }
                 }
             }
@@ -94,28 +86,32 @@ namespace Compiladores_Proyecto_Deanosaurios
                     if(band)
                     {
                         res = true;
+                        Console.WriteLine("El estado " + U.name + " es igual en sus estados que el estado " + dEstados[i].name);
                     }
                 }
             }
             return res;
-            /*foreach(DEstado d in dEstados)
+        }
+
+        public bool compararDestados(DEstado d1,DEstado d2)
+        {
+            bool res = false;
+            if (d1.estados.Count() == d2.estados.Count())
             {
-                if(U.estados.Count == d.estados.Count)
+                bool band = true;
+                for (int j = 0; j < d1.estados.Count() && band; j++)
                 {
-                    bool band = true;//significa que son iguales
-                    for(int i = 0; i < d.estados.Count && band; i++)
+                    if (!d1.estados.Contains(d2.estados[j]))
                     {
-                        if (d.estados[i] != U.estados[i])
-                        {
-                            band = false;
-                        }
-                    }
-                    if (band)
-                    {
-                        return true;
+                        band = false;
                     }
                 }
-            }*/
+                if (band)
+                {
+                    res = true;
+                }
+            }
+            return (res);
         }
         public DEstado cerraduraEpsilon(List<EDO> e)
         {
@@ -184,5 +180,37 @@ namespace Compiladores_Proyecto_Deanosaurios
             }
             return res;
         }
+        public bool lexemaValido(string s, DEstado d)
+        {
+            bool res = false;
+            if (d.estadoAceptacion && s == "")
+            {
+                return true;
+            }
+            else
+            {
+                string auxS = "";
+                if (s.Count()>1)
+                {
+                    for (int i = 1; i < s.Count(); i++)
+                    {
+                        auxS += s[i].ToString();
+                    }
+                }
+                foreach (TransicionDestado t in d.transiciones)
+                {
+                    if (s[0].ToString() == t.valor)
+                    {
+                        if (lexemaValido(auxS, t.destino))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return res;
+        }
+
+        
     }
 }

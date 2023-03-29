@@ -272,7 +272,7 @@ namespace Compiladores_Proyecto_Deanosaurios
                 }
                 if (afd.dEstados[i].estados.Contains(afn.estados[afn.estados.Count - 1]))
                 {
-                    textBox6.Text += afd.dEstados[i].name + " ";
+                    textBox5.Text += afd.dEstados[i].name + " ";
                 }
                 contadorDestados++;
                 DataGridViewRow r = new DataGridViewRow();
@@ -293,6 +293,21 @@ namespace Compiladores_Proyecto_Deanosaurios
                 dataGridView2.Rows.Add(r);
             }
             textBox4.Text = contadorDestados.ToString();
+            textBox5.Text = "";
+            foreach (DEstado d in afd.dEstados)
+            {
+                if (d.estadoAceptacion)
+                {
+                    textBox5.Text += " " +d.name;
+                }
+            }
+            foreach(EDO edo in afn.estados)
+            {
+                if (edo.estadoAceptacion)
+                {
+                    textBox7.Text += " " + edo.nombre;
+                }
+            }
         }
 
         private void label6_Click(object sender, EventArgs e)
@@ -303,6 +318,43 @@ namespace Compiladores_Proyecto_Deanosaurios
         private void label7_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void label9_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (afd.lexemaValido(textBox6.Text, afd.dEstados[0]))
+            {
+                label9.Text = "Si pertenece al lenguaje de la ER";
+            }
+            else
+            {
+                label9.Text = "NO pertenece al lenguaje de la ER";
+            }
+        }
+
+        private void textBox7_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            textBox9.Text = "";
+            foreach (DEstado d in afd.dEstados)
+            {
+                if(d.name == textBox8.Text)
+                {
+                    foreach (EDO edo in d.estados)
+                    {
+                        textBox9.Text += " " + edo.nombre;
+                    }
+                }
+            }
         }
     }
 }
