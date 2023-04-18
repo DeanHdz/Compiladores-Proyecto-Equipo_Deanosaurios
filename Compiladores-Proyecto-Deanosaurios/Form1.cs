@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace Compiladores_Proyecto_Deanosaurios
 {
@@ -14,10 +17,16 @@ namespace Compiladores_Proyecto_Deanosaurios
     {
         AFN afn = new AFN();
         AFD afd = new AFD();
+
+        static List<string> PalabrasReservadas = new List<string>() { "if","then","else","end","repeat","until","read","write"};
+        static List<string> SimbolosEspeciales = new List<string>() { "+","-","*","/","=","<",">","(",")",";",":="};
+
         public Form1()
         {
             InitializeComponent();
         }
+
+        #region 1er entrega
 
         bool ChecarPrioridad(Stack<char> pila, char input)
         {
@@ -169,10 +178,7 @@ namespace Compiladores_Proyecto_Deanosaurios
 
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
+        #endregion
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -310,21 +316,6 @@ namespace Compiladores_Proyecto_Deanosaurios
             }
         }
 
-        private void label6_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label7_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label9_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void button3_Click(object sender, EventArgs e)
         {
             if (afd.lexemaValido(textBox6.Text, afd.dEstados[0]))
@@ -335,11 +326,6 @@ namespace Compiladores_Proyecto_Deanosaurios
             {
                 label9.Text = "NO pertenece al lenguaje de la ER";
             }
-        }
-
-        private void textBox7_TextChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -356,42 +342,206 @@ namespace Compiladores_Proyecto_Deanosaurios
                 }
             }
         }
-    }
-}
 
-/*
-    CONVERTIR EXPRESIONES INFIJAS EN POSFIJAS.
+        //Funciones para Tokens
+        public string ConvPosfija(string input)
+        {
+            //Conversion de Expresion regular a infija
+            String infija = "";
 
-1.Definir la prioridad del conjunto de operaciones.
-2.Inicializar una pila.
-3.Inicializar posfija.
+            int i = 0; //Iterador del string input
 
-Apuntar al primer carácter de la expresión infija.
-while(no ocurra un error && no sea fin de la expresión infija)
-{
-    switch(carácter)
-    {
-        Paréntesis izquierdo:   Insertar en la pila;
-                                break;
-        Paréntesis derecho:     Extraer de la pila y desplegar en posfija hasta encontrar “paréntesis izquierdo” (no desplegarlo);
-                                break;
-        Operando:               Desplegar en posfija;
-                                break;
-        Operador:               band = true;
-                                while(band)
+            while (i < input.Length)
+            {
+                //Case #1
+                if (input[i] == '(' || input[i] == '|')
+                {
+                    infija += input[i]; // Letra/Numero/Operador
+                }
+                else
+                {
+                    //Case #2-1
+                    if (input[i] == '[') //Intervalo iniciado
+                    {
+                        infija += '('; //Sustituir el corchete
+                        i++;//Apunta al caracter despues del corchete
+                        infija += input[i];
+                        if (input[i + 1] == '-')
+                        {
+                            for (int j = (int)input[i]; j < (int)input[i + 2]; j++)
+                            {
+                                infija += '|';
+                                infija += (Char)(j + 1);
+                            }
+                            infija += ')';
+                            i += 3; //Mover iterador apuntando al reciente ')'
+                        }
+                        else
+                        {
+                            i++;
+                            while (input[i] != ']')
+                            {
+                                infija += '|';
+                                infija += input[i];
+                                i++;
+                            }
+                            infija += ')';
+                        }
+                    }
+                    //Case #2-2
+                    else
+                    {
+                        infija += input[i];
+                    }
+
+                    if (i + 1 < input.Length)
+                    {
+                        if (input[i + 1] != '*' && input[i + 1] != '?' && input[i + 1] != '+' && input[i + 1] != '|' && input[i + 1] != ')')
+                        {
+                            infija += '&';
+                        }
+                    }
+                }
+                i++; //Apuntar al siguiente caracter    
+            }
+
+            //Realizar Conversion (CONVERTIR EXPRESIONES INFIJAS EN POSFIJAS)
+
+            //1.Definir la prioridad del conjunto de operaciones... ke?
+
+            //2 Inicializar una pila
+            Stack<char> pila = new Stack<char>();
+
+            //3 Inicializar posfija
+            String posfija = "";
+            i = 0; //iterador del string infija
+
+            try
+            {
+                while (i < infija.Length) //Mienstras no sea fin de la expresión infija
+                {
+                    switch (infija[i])
+                    {
+                        case '(':
+                            pila.Push(infija[i]); //Insertar en la pila
+                            break;
+                        case ')':
+                            while (pila.Peek() != '(') // Extraer de la pila y desplegar en posfija hasta encontrar “paréntesis izquierdo” (no desplegarlo)
+                            {
+                                posfija += pila.Pop();
+                            }
+                            _ = pila.Pop(); //No desplegar parentesis izquierdo
+                            break;
+                        default:
+                            //(Operando) Numero, minuscula, mayuscula, ñ
+                            if (infija[i] >= 48 && infija[i] <= 57 || infija[i] >= 97 && infija[i] <= 122 || infija[i] >= 65 && infija[i] <= 90 || infija[i] == 'ñ' || infija[i] == 'Ñ')
+                            {
+                                posfija += infija[i]; // Desplegar en posfija
+                            }
+                            //Para el "verdadero" default, se asume que se tiene un operador
+                            else
+                            {
+                                bool band = true;
+                                while (band)
                                 {
-                                    if( la pila está vacía || 
-                                        el tope de la pila es un “paréntesis izquierdo” || 
-                                        el operador tiene mayor prioridad que el tope de la pila)
+                                    if (pila.Count == 0 || pila.Peek() == '(' || ChecarPrioridad(pila, infija[i]))
                                     {
-                                        Insertar el operador en la pila;
+                                        pila.Push(infija[i]); //Insertar el operador en la pila;
                                         band = false;
-                                    }else
-                                        Extraer el tope de la pila y desplegar en posfija;
+                                    }
+                                    else
+                                        posfija += pila.Pop(); //Extraer el tope de la pila y desplegar en posfija;
                                 }
-                                break;
+                            }
+                            break;
+                    }
+                    i++; //Apuntar al siguiente carácter de la expresión infija
+                }
+                while (pila.Count > 0)
+                    posfija += pila.Pop(); // Extraer y desplegar en posfija los elementos de la pila hasta que se vacíe
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString() + " ... La cadena inicial no es valido");
+            }
+
+            return posfija;
+        }
+
+        //Boton clasifica tokens
+        private void button5_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if(textBox10.Text != "" && textBox11.Text != "" && textBox12.Text != "")
+                {
+                    dataGridView3.Rows.Clear(); //Reiniciar contenido de tabla
+
+                    //Iniciar proceso de AFN/AFD del identificador y numero
+                    //Posfijas
+                    string posID = ConvPosfija(textBox10.Text);
+                    string posNum = ConvPosfija(textBox11.Text);
+                    //AFNs
+                    AFN AFN_ID = new AFN();
+                    AFN_ID.conviertePosfijaEnAFN(posID);
+                    AFN AFN_Num = new AFN();
+                    AFN_Num.conviertePosfijaEnAFN(posNum);
+                    //AFDs
+                    AFD AFD_ID = new AFD();
+                    AFD_ID.construyeAFD(AFN_ID);
+                    AFD AFD_Num = new AFD();
+                    AFD_Num.construyeAFD(AFN_Num);
+
+                    List<String[]> Code = new List<String[]>(); //Cachitos de codigo en cada linea
+                    int Line = 0; //Linea actual al imprimir en grid
+
+                    for (int i = 0; i < textBox12.Lines.Length; i++)
+                    {
+                        // Leer linea por linea textbox y separar codigo
+                        string Trim = textBox12.Lines[i].Trim();
+                        String[] lineArr = Trim.Split(' ');
+                        Code.Add(lineArr);
+                        foreach (string s in lineArr)
+                        {
+                            // Leer cada renglon e identificar el codigo 
+                            
+                            // Identificar renglon vacio
+                            if(s == null || s == "") { Line--; }//Hacer nada, contrarestar recorrimiento de linea en tabla
+                            // Prueba palabra reservada
+                            else if (PalabrasReservadas.Contains(s)){
+                                    dataGridView3.Rows.Add(s, s);
+                            }
+                            // Prueba Simbolo especial
+                            else if (SimbolosEspeciales.Contains(s)){
+                                    dataGridView3.Rows.Add(s, s);
+                            }
+                            // Pprueba AFD Numero
+                            else if ( AFD_Num.lexemaValido(s, AFD_Num.dEstados[0]) ){
+                                    dataGridView3.Rows.Add("número", s);
+                            }
+                            // Prueba AFD Identificador
+                            else if ( AFD_ID.lexemaValido(s, AFD_ID.dEstados[0]) ){
+                                    dataGridView3.Rows.Add("ídentificador", s);
+                            }
+                            // Error lexico
+                            else if (s != ""){
+                                    dataGridView3.Rows.Add("Error Léxico", s); 
+                                    dataGridView3.Rows[Line].Cells[0].Style.ForeColor = Color.Red;
+                                    dataGridView3.Rows[Line].Cells[1].Style.ForeColor = Color.Red;
+                            }
+                            Line++;
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("No estan rellenados todos los campos.");
+                }
+            }
+            catch(Exception E)
+            {
+                MessageBox.Show("Error: " + E.Message);
+            }
+        }
     }
-    Apuntar al siguiente carácter de la expresión infija;
 }
-Extraer y desplegar en posfija los elementos de la pila hasta que se vacíe;
-*/
