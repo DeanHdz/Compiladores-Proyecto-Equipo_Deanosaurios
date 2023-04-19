@@ -219,5 +219,15 @@ namespace Compiladores_Proyecto_Deanosaurios
             AFN AFNaux = pilaAFN.Pop();
             estados = AFNaux.estados;
         }
+
+
+
+        #region paraTiny
+
+
+
+        #endregion
+
+
     }
 }
