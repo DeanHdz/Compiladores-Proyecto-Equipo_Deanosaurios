@@ -343,6 +343,7 @@ namespace Compiladores_Proyecto_Deanosaurios
             }
         }
 
+        #region 5ta entrega
         //Funciones para Tokens
         public string ConvPosfija(string input)
         {
@@ -543,5 +544,38 @@ namespace Compiladores_Proyecto_Deanosaurios
                 MessageBox.Show("Error: " + E.Message);
             }
         }
+
+        #endregion
+
+        #region Entrega 6
+        //Boton Construir Colección LR(0) Canónica
+        private void button6_Click(object sender, EventArgs e)
+        {
+            GramTINY G = new GramTINY();                                                                                //TINY ya con su AFD
+            dataGridView4.Rows.Clear(); dataGridView4.Columns.Clear(); dataGridView4.Columns.Add("Estados", "Estados"); //Vaciar la tabla AFD
+            textBox13.Text = "";                                                                                        //Vaciar textbox de la informacion del estado
+
+            List<String> Transiciones = G.Afd_lr.SimbolosGramaticales;                                                  //Rescatar las transiciones (T,NT)
+            foreach (String s in Transiciones){dataGridView4.Columns.Add(s, s); }                                       //Agregar columnas de transicion a datagrid AFD
+
+            foreach (LR_Estado est in G.Afd_lr.Estados)
+            {
+                String EstadoString = est.getEstado();                                                                  //get del string estado
+                textBox13.Text += "l" + est.Index_Estado + " =" + Environment.NewLine + "{" + Environment.NewLine + EstadoString + "} " + Environment.NewLine + Environment.NewLine; //Imprimir estado en textbox
+
+                List<String> Lista_Elementos = new List<String>{ "l" + est.Index_Estado.ToString()};
+                foreach (String s in Transiciones)
+                {
+                    LR_TransicionD transicionDAux = est.getTransicion(s);
+                    //Verificar si existe el estado destino
+                    if (transicionDAux == null)
+                        Lista_Elementos.Add("vacio");
+                    else 
+                        Lista_Elementos.Add(transicionDAux.Index_Destado.ToString()); 
+                }
+                dataGridView4.Rows.Add(Lista_Elementos.ToArray());// Agregar a la lista de elementos del AFD
+            }
+        }
+        #endregion
     }
 }
