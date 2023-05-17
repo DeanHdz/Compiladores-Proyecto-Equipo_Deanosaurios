@@ -25,6 +25,12 @@ namespace Compiladores_Proyecto_Deanosaurios
         public String PAumentada;
         public int Cont_Estado = 0;
 
+        /*************************** INICIO AVANCE 7 (Dean) ******************************/
+        public String[,] ir_a;
+        public String[,] Accion;
+        /************************** FIN AVANCE 7 (Dean) ********************************/
+
+
         public A_LR(Dictionary<String, String> Gramatica, List<String> Terminales, List<String> NoTerminales, String GramaticaAumentada)
         {
             this.Gramatica = Gramatica;
@@ -34,23 +40,111 @@ namespace Compiladores_Proyecto_Deanosaurios
             this.SimbolosGramaticales = new List<String>();
 
             foreach (String s in this.NoTerminales)
-            {
                 this.SimbolosGramaticales.Add(s);
-            }
             foreach (String s in this.Terminales)
-            {
                 this.SimbolosGramaticales.Add(s);
-            }
-
             Inicializar();
         }
+        
+        /*************************************** INICIO AVANCE 7 (Dean) *********************************************/
+
+        public void CrearTablaDeAnalisis(Dictionary<String, String> Siguientes)
+        {
+            foreach (LR_Estado estado in this.Estados)                      // RECORRER CADA ESTADO
+            {
+                foreach (LR_Elemento elemento in estado.Elementos_Estado)   //RECORRER CADA ELEMENTO EN EL ESTADO
+                {
+                    String Aux = elemento.Encabezado.TrimEnd(' ');
+                    elemento.Encabezado = Aux;
+
+                    //(DIRIGE / DESPLAZAR)
+                    //Inciso A)  Si [ A → α.aβ ] está en Ii e ir_A(Ii , a ) = Ij 
+                    if (elemento.Cuerpo.IndexOf(".") != elemento.Cuerpo.Length - 1)
+                    {
+                        int punto = elemento.Cuerpo.IndexOf(".");
+                        int length = elemento.Cuerpo.Length;
+                        String aux = TerminalDespuesDelPunto(elemento.Cuerpo, elemento.Cuerpo.IndexOf("."));
+                        if (aux != null)
+                        {
+                            int indiceIrA = -1;
+                            foreach (LR_TransicionD t in estado.Transiciones)
+                            {
+                                if (t.S == aux)
+                                    indiceIrA = t.Index_Destado;
+                            }
+                            if (indiceIrA != -1)
+                            {
+                                int indiceSimbolo = Terminales.IndexOf(aux);
+                                Accion[estado.Index_Estado, Terminales.IndexOf(aux)] = "d" + indiceIrA.ToString(); //Guardar en arreglo accion
+                            }
+                        }
+                    }
+
+                    //Inciso B) Si [ A → α. ] está en Ii,
+                    if (!elemento.Encabezado.Contains("'") && elemento.Cuerpo.IndexOf(".") == elemento.Cuerpo.Length - 1)
+                    {// si el punto esta al ultimo se hacen los reducir
+                        String[] siguientesCadena = Siguientes[elemento.Encabezado].Split(' ');
+                        int indicePunto = elemento.Cuerpo.IndexOf(".");
+                        String elementoSinPuntoAux = elemento.Cuerpo.Remove(elemento.Cuerpo.IndexOf(".")).TrimEnd(' ');
+
+                        int indiceProd = Produccion_Indice(elementoSinPuntoAux);
+                        foreach (String s in siguientesCadena)
+                        {
+                            if (s == "$")
+                                Accion[estado.Index_Estado, Terminales.Count] = "r" + indiceProd.ToString();        //Guardar en arreglo accion
+                            else
+                                Accion[estado.Index_Estado, Terminales.IndexOf(s)] = "r" + indiceProd.ToString();   //Guardar en arreglo accion
+                        }
+                    }
+
+                    //Inciso C) Si [ S’ → S. ] está en Ii entonces, ACCION[ i, $ ] = “aceptar” (ac).
+                    if (elemento.Encabezado.Contains("'") && elemento.Cuerpo.IndexOf(".") == elemento.Cuerpo.Length - 1)
+                        Accion[estado.Index_Estado, Terminales.Count()] = "ac";     //Guardar en arreglo accion                                           
+
+                }
+                foreach (LR_TransicionD tD in estado.Transiciones)
+                {
+                    if (NoTerminales.Contains(tD.S))
+                        this.ir_a[estado.Index_Estado, NoTerminales.IndexOf(tD.S)] = tD.Index_Destado.ToString();
+                }
+            }
+        }
+
+        public String TerminalDespuesDelPunto(String elemento, int index)
+        {
+            foreach (String s in this.Terminales)
+                if (elemento.IndexOf(s, index) == index + 2)
+                    return s;
+            return null;
+        }
+
+        //Rescatar el indice de la produccion
+        public int Produccion_Indice(String produccionBus)
+        {
+            int aux = 0;
+            foreach (KeyValuePair<String, String> EntradaD in this.Gramatica)
+            {
+                String[] ArregloCadenas = EntradaD.Value.Split('|');
+                foreach (String c in ArregloCadenas)
+                {
+                    aux++;
+                    if (produccionBus == c)
+                        return aux;
+                }
+            }
+            return 0;
+        }
+
+        /****************************************** FIN AVANCE 7 (Dean) ****************************************************/
+
 
         // Funcion para inicializar el AFD_LR
         public void Inicializar()
-        { 
-            Estados = new List<LR_Estado>();                                                            //Inicializar estados del AFD
-            LR_Elemento Elemento_ini = new LR_Elemento(PAumentada , "programa'");                       //Elemento inicial es programa (. programa) (1.-Una gramatica aumentada)
-            List<LR_Elemento> Elementos_iniciales = new List<LR_Elemento>{Elemento_ini};                //Insertar en lista de elementos de la produccion programa
+        {
+            Cont_Estado = 0;
+            Estados = new List<LR_Estado>();                                                           //Inicializar estados del AFD
+            LR_Elemento Elemento_ini = new LR_Elemento(PAumentada , "programa'");                      //Elemento inicial es programa (. programa) (1.-Una gramatica aumentada)
+            List<LR_Elemento> Elementos_iniciales = new List<LR_Elemento> { Elemento_ini };            //Insertar la gramatica aumentada
             LR_Estado Estado_ini = new LR_Estado(CERRADURA(Elementos_iniciales), Cont_Estado);         //Crear primera cerradura en base a la lista inicial
             Estados.Add(Estado_ini);                                                                   //Definir estado l0
 
@@ -58,7 +152,7 @@ namespace Compiladores_Proyecto_Deanosaurios
             {
                 foreach (String c in SimbolosGramaticales)
                 { 
-                    List<LR_Elemento> Ir_A = ir_A(i, c);                                                //Agregar cada simbolo a ir_A
+                    List<LR_Elemento> Ir_A = ir_A(i, c);
                     if (Ir_A.Count != 0 && ChecaNuevoEstado(Ir_A) == -1)
                     {
                         Cont_Estado++;
@@ -73,6 +167,21 @@ namespace Compiladores_Proyecto_Deanosaurios
                     }
                 }
             }
+
+            /*************************** INICIO AVANCE 7 (Dean) ******************************/
+
+            // Preparar las tablas de Accion e ir_a
+            this.ir_a = new String[Estados.Count, NoTerminales.Count];
+            this.Accion = new String[Estados.Count, Terminales.Count + 1]; // +1 por el $
+            for (int i = 0; i < Estados.Count; i++)
+            {
+                for (int j = 0; j < NoTerminales.Count; j++)
+                    this.ir_a[i, j] = "";
+                for (int z = 0; z < Terminales.Count + 1; z++)
+                    this.Accion[i, z] = "";
+            }
+            /************************** FIN AVANCE 7 (Dean) ********************************/
+
         }
 
         public int ChecaNuevoEstado(List<LR_Elemento> Candidato)
@@ -88,7 +197,6 @@ namespace Compiladores_Proyecto_Deanosaurios
         // 2.-Una funcion CERRADURA
         public List<LR_Elemento> CERRADURA (List<LR_Elemento> ElementosEvaluar)
         { 
-            
             List<LR_Elemento> J = new List<LR_Elemento>();  //Lista de elementos a retornar
             foreach (LR_Elemento e in ElementosEvaluar)     //Se agregan todos los elementos iniciales
             {

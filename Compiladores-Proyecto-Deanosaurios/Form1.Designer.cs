@@ -78,16 +78,22 @@
             this.label12 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label13 = new System.Windows.Forms.Label();
+            this.dataGridView6 = new System.Windows.Forms.DataGridView();
+            this.dataGridView5 = new System.Windows.Forms.DataGridView();
             this.textBox13 = new System.Windows.Forms.TextBox();
             this.dataGridView4 = new System.Windows.Forms.DataGridView();
             this.Estado = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.button6 = new System.Windows.Forms.Button();
+            this.label14 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).BeginInit();
             this.SuspendLayout();
             // 
@@ -520,6 +526,10 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.label14);
+            this.tabPage2.Controls.Add(this.label13);
+            this.tabPage2.Controls.Add(this.dataGridView6);
+            this.tabPage2.Controls.Add(this.dataGridView5);
             this.tabPage2.Controls.Add(this.textBox13);
             this.tabPage2.Controls.Add(this.dataGridView4);
             this.tabPage2.Controls.Add(this.button6);
@@ -531,9 +541,34 @@
             this.tabPage2.Text = "Análisis sintáctico";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(183, 364);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(96, 13);
+            this.label13.TabIndex = 5;
+            this.label13.Text = "ACCIÓN (Terminal)";
+            // 
+            // dataGridView6
+            // 
+            this.dataGridView6.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView6.Location = new System.Drawing.Point(479, 380);
+            this.dataGridView6.Name = "dataGridView6";
+            this.dataGridView6.Size = new System.Drawing.Size(477, 351);
+            this.dataGridView6.TabIndex = 4;
+            // 
+            // dataGridView5
+            // 
+            this.dataGridView5.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView5.Location = new System.Drawing.Point(6, 380);
+            this.dataGridView5.Name = "dataGridView5";
+            this.dataGridView5.Size = new System.Drawing.Size(467, 351);
+            this.dataGridView5.TabIndex = 3;
+            // 
             // textBox13
             // 
-            this.textBox13.Location = new System.Drawing.Point(6, 341);
+            this.textBox13.Location = new System.Drawing.Point(389, 8);
             this.textBox13.Multiline = true;
             this.textBox13.Name = "textBox13";
             this.textBox13.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -547,7 +582,7 @@
             this.Estado});
             this.dataGridView4.Location = new System.Drawing.Point(6, 35);
             this.dataGridView4.Name = "dataGridView4";
-            this.dataGridView4.Size = new System.Drawing.Size(950, 300);
+            this.dataGridView4.Size = new System.Drawing.Size(377, 300);
             this.dataGridView4.TabIndex = 1;
             // 
             // Estado
@@ -559,11 +594,20 @@
             // 
             this.button6.Location = new System.Drawing.Point(6, 6);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(226, 23);
+            this.button6.Size = new System.Drawing.Size(377, 23);
             this.button6.TabIndex = 0;
-            this.button6.Text = "Construir Colección LR(0) Canónica";
+            this.button6.Text = "Construir Colección LR(0) Canónica y Tabla de Análisis Sintáctico LR";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(667, 364);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(91, 13);
+            this.label14.TabIndex = 6;
+            this.label14.Text = "ir_A (No Terminal)";
             // 
             // Form1
             // 
@@ -585,6 +629,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).EndInit();
             this.ResumeLayout(false);
 
@@ -645,6 +691,10 @@
         private System.Windows.Forms.DataGridView dataGridView4;
         private System.Windows.Forms.DataGridViewTextBoxColumn Estado;
         private System.Windows.Forms.TextBox textBox13;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.DataGridView dataGridView6;
+        private System.Windows.Forms.DataGridView dataGridView5;
+        private System.Windows.Forms.Label label14;
     }
 }
 

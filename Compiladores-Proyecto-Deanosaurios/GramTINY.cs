@@ -10,7 +10,7 @@ namespace Compiladores_Proyecto_Deanosaurios
 {
     internal class GramTINY
     {
-        public Dictionary<String, String> Gramatica;
+        public Dictionary<String, String> Gramatica, Siguientes;
         public List<String> Terminales, NoTerminales;
         public String Produccion;
         public A_LR Afd_lr;
@@ -40,6 +40,26 @@ namespace Compiladores_Proyecto_Deanosaurios
             this.NoTerminales = new List<String> { "programa" , "secuencia-sent" , "sentencia" , "sent-if" , "sent-repeat" , "sent-assign" , "sent-read" , "sent-write" , "exp" , "op-comp" , "exp-simple" , "opsuma" , "term" , "opmult" , "factor" };
 
             this.Produccion = ". programa";
+
+                //(Luis)
+            this.Siguientes = new Dictionary<string, string>
+            {
+                {"programa" , "$" },
+                {"secuencia-sent" , "; end else until $" },
+                {"sentencia" , "; end else until $" },
+                {"sent-if" , "; end else until $"},
+                {"sent-repeat" , "; end else until $"},
+                {"sent-assign" , "; end else until $"},
+                {"sent-read" , "; end else until $"},
+                {"sent-write" , "; end else until $"},
+                {"exp" , "; end else until $ then )"},
+                {"op-comp" , "( numero identificador" },
+                {"exp-simple" , "; end else until $ then ) < > = + -"},
+                {"opsuma" , "( numero identificador"},
+                {"term" , "; end else until $ then ) < > = + - * /"},
+                {"opmult" , "( numero identificador"},
+                {"factor" , "; end else until $ then ) < > = + - * /"},
+            };
 
             this.Afd_lr = new A_LR(this.Gramatica, this.Terminales, this.NoTerminales, this.Produccion);
 

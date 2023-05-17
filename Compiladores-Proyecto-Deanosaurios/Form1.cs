@@ -553,12 +553,12 @@ namespace Compiladores_Proyecto_Deanosaurios
         {
             GramTINY G = new GramTINY();                                                                                //TINY ya con su AFD
             dataGridView4.Rows.Clear(); dataGridView4.Columns.Clear(); dataGridView4.Columns.Add("Estados", "Estados"); //Vaciar la tabla AFD
-            textBox13.Text = "";                                                                                        //Vaciar textbox de la informacion del estado
+            textBox13.Text = "";       
 
             List<String> Transiciones = G.Afd_lr.SimbolosGramaticales;                                                  //Rescatar las transiciones (T,NT)
             foreach (String s in Transiciones){dataGridView4.Columns.Add(s, s); }                                       //Agregar columnas de transicion a datagrid AFD
 
-            foreach (LR_Estado est in G.Afd_lr.Estados)
+            foreach (LR_Estado est in G.Afd_lr.Estados) //Por cada estado en la lista de estados imprimirlo en el textbox con su respectivo lista de elementos
             {
                 String EstadoString = est.getEstado();                                                                  //get del string estado
                 textBox13.Text += "l" + est.Index_Estado + " =" + Environment.NewLine + "{" + Environment.NewLine + EstadoString + "} " + Environment.NewLine + Environment.NewLine; //Imprimir estado en textbox
@@ -575,7 +575,51 @@ namespace Compiladores_Proyecto_Deanosaurios
                 }
                 dataGridView4.Rows.Add(Lista_Elementos.ToArray());// Agregar a la lista de elementos del AFD
             }
+
+            /*************************** INICIO AVANCE 7 (Dean) ******************************/
+            dataGridView5.Columns.Clear(); dataGridView6.Columns.Clear();                                       // Vaciar la TABLA DE TRANSICION (vaciar Accion e ir_A)
+
+            G.Afd_lr.CrearTablaDeAnalisis(G.Siguientes);                                                        // INICIAR LA TABLA DE ANALISIS SINTACTICO COMO TAL
+
+
+            dataGridView5.Columns.Add("Estados", "Estados");                                                    // Agregar la columna de estados a la tabla
+
+            for (int i = 0; i < G.Terminales.Count; i++)                                                        // Por cada Terminal se agrega una columna en tabla Accion
+                dataGridView5.Columns.Add(G.Terminales[i], G.Terminales[i]);        
+            dataGridView5.Columns.Add("$", "$");                                                                // Agregar la columna $
+
+            for (int i = 0; i < G.NoTerminales.Count; i++)
+                dataGridView6.Columns.Add(G.NoTerminales[i], G.NoTerminales[i]);                                // Por cada NoTerminal se agrega una columna en tabla Ir_A
+
+            // (TERMINALES) Iterar estados e indicar accion
+            for (int i = 0; i < G.Afd_lr.Estados.Count; i++){
+                List<String> GridRow = new List<String>{ i.ToString() };
+                for (int j = 0; j <= G.Terminales.Count; j++){
+                    if (G.Afd_lr.Accion[i, j] != null)
+                        GridRow.Add(G.Afd_lr.Accion[i, j]);
+                    else
+                        GridRow.Add("vacio");
+                }
+                dataGridView5.Rows.Add(GridRow.ToArray());
+            }
+
+            // (NO TERMINALES) Iterar estados e indicar accion
+            for (int i = 0; i < G.Afd_lr.Estados.Count; i++){
+                List<String> GridRow = new List<String>();
+                for (int j = 0; j < G.NoTerminales.Count; j++){
+                    if (G.Afd_lr.ir_a[i, j] != null)
+                        GridRow.Add(G.Afd_lr.ir_a[i, j]);
+                    else
+                        GridRow.Add("vacio");
+                }
+                dataGridView6.Rows.Add(GridRow.ToArray());                          
+             }
+
+            /************************** FIN AVANCE 7 (Dean) ********************************/
+
         }
-        #endregion
+
+
     }
+    #endregion
 }
