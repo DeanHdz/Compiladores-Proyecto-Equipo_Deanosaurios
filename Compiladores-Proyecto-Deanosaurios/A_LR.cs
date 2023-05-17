@@ -9,12 +9,6 @@ using System.Windows.Forms;
 namespace Compiladores_Proyecto_Deanosaurios
 {
 
-    /* PARA CONSTRUIR UNA COLECCION LR(0) CANONICA DE UNA GRAMATICA, DEFINIMOS:
-     * 1.-Una gramatica aumentada
-     * 2.-Una funcion CERRADURA
-     * 3.-Una funcion ir_A
-     */
-
     internal class A_LR
     {
         public List<String> Terminales;
@@ -25,10 +19,10 @@ namespace Compiladores_Proyecto_Deanosaurios
         public String PAumentada;
         public int Cont_Estado = 0;
 
-        /*************************** INICIO AVANCE 7 (Dean) ******************************/
+        /*************************** INICIO AVANCE 7  ******************************/
         public String[,] ir_a;
         public String[,] Accion;
-        /************************** FIN AVANCE 7 (Dean) ********************************/
+        /************************** FIN AVANCE 7 ********************************/
 
 
         public A_LR(Dictionary<String, String> Gramatica, List<String> Terminales, List<String> NoTerminales, String GramaticaAumentada)
@@ -46,7 +40,7 @@ namespace Compiladores_Proyecto_Deanosaurios
             Inicializar();
         }
         
-        /*************************************** INICIO AVANCE 7 (Dean) *********************************************/
+        /*************************************** INICIO AVANCE 7 *********************************************/
 
         public void CrearTablaDeAnalisis(Dictionary<String, String> Siguientes)
         {
@@ -80,14 +74,15 @@ namespace Compiladores_Proyecto_Deanosaurios
                         }
                     }
 
+                    //(REDUCIR)
                     //Inciso B) Si [ A → α. ] está en Ii,
                     if (!elemento.Encabezado.Contains("'") && elemento.Cuerpo.IndexOf(".") == elemento.Cuerpo.Length - 1)
                     {// si el punto esta al ultimo se hacen los reducir
-                        String[] siguientesCadena = Siguientes[elemento.Encabezado].Split(' ');
+                        String[] siguientesCadena = Siguientes[(string)elemento.Encabezado].Split(' ');
                         int indicePunto = elemento.Cuerpo.IndexOf(".");
-                        String elementoSinPuntoAux = elemento.Cuerpo.Remove(elemento.Cuerpo.IndexOf(".")).TrimEnd(' ');
+                        String elemento_limpio = elemento.Cuerpo.Remove((int)elemento.Cuerpo.IndexOf(".")).TrimEnd(' ');
 
-                        int indiceProd = Produccion_Indice(elementoSinPuntoAux);
+                        int indiceProd = Produccion_Indice(elemento_limpio);
                         foreach (String s in siguientesCadena)
                         {
                             if (s == "$")
@@ -97,6 +92,7 @@ namespace Compiladores_Proyecto_Deanosaurios
                         }
                     }
 
+                    //(ESTADO DE ACEPTACION)
                     //Inciso C) Si [ S’ → S. ] está en Ii entonces, ACCION[ i, $ ] = “aceptar” (ac).
                     if (elemento.Encabezado.Contains("'") && elemento.Cuerpo.IndexOf(".") == elemento.Cuerpo.Length - 1)
                         Accion[estado.Index_Estado, Terminales.Count()] = "ac";     //Guardar en arreglo accion                                           
@@ -105,7 +101,7 @@ namespace Compiladores_Proyecto_Deanosaurios
                 foreach (LR_TransicionD tD in estado.Transiciones)
                 {
                     if (NoTerminales.Contains(tD.S))
-                        this.ir_a[estado.Index_Estado, NoTerminales.IndexOf(tD.S)] = tD.Index_Destado.ToString();
+                        this.ir_a[estado.Index_Estado, NoTerminales.IndexOf(tD.S)] = tD.Index_Destado.ToString();   //Guardar en arreglo ir_a
                 }
             }
         }
@@ -118,7 +114,6 @@ namespace Compiladores_Proyecto_Deanosaurios
             return null;
         }
 
-        //Rescatar el indice de la produccion
         public int Produccion_Indice(String produccionBus)
         {
             int aux = 0;
@@ -135,7 +130,7 @@ namespace Compiladores_Proyecto_Deanosaurios
             return 0;
         }
 
-        /****************************************** FIN AVANCE 7 (Dean) ****************************************************/
+        /****************************************** FIN AVANCE 7 ****************************************************/
 
 
         // Funcion para inicializar el AFD_LR
@@ -168,7 +163,7 @@ namespace Compiladores_Proyecto_Deanosaurios
                 }
             }
 
-            /*************************** INICIO AVANCE 7 (Dean) ******************************/
+            /*************************** INICIO AVANCE 7 ******************************/
 
             // Preparar las tablas de Accion e ir_a
             this.ir_a = new String[Estados.Count, NoTerminales.Count];
@@ -180,7 +175,7 @@ namespace Compiladores_Proyecto_Deanosaurios
                 for (int z = 0; z < Terminales.Count + 1; z++)
                     this.Accion[i, z] = "";
             }
-            /************************** FIN AVANCE 7 (Dean) ********************************/
+            /************************** FIN AVANCE 7 ********************************/
 
         }
 

@@ -576,7 +576,7 @@ namespace Compiladores_Proyecto_Deanosaurios
                 dataGridView4.Rows.Add(Lista_Elementos.ToArray());// Agregar a la lista de elementos del AFD
             }
 
-            /*************************** INICIO AVANCE 7 (Dean) ******************************/
+            /*************************** INICIO AVANCE 7 ******************************/
             dataGridView5.Columns.Clear(); dataGridView6.Columns.Clear();                                       // Vaciar la TABLA DE TRANSICION (vaciar Accion e ir_A)
 
             G.Afd_lr.CrearTablaDeAnalisis(G.Siguientes);                                                        // INICIAR LA TABLA DE ANALISIS SINTACTICO COMO TAL
@@ -615,7 +615,7 @@ namespace Compiladores_Proyecto_Deanosaurios
                 dataGridView6.Rows.Add(GridRow.ToArray());                          
              }
 
-            /************************** FIN AVANCE 7 (Dean) ********************************/
+            /************************** FIN AVANCE 7 ********************************/
 
         }
 
