@@ -695,7 +695,7 @@ namespace Compiladores_Proyecto_Deanosaurios
 
             /** Limpiar y preparar Area de Trabajo **/
             //Dejar arbol sintactico en blanco
-            Arbol.Nodes.Clear(); Arbol.Refresh();           //Quitar nodos y redibujar
+            Arbol.Nodes.Clear(); Arbol.Refresh(); Arbol.ExpandAll();           //Quitar nodos y redibujar
             //Inicializar estructuras
             Stack<int> PilaDeEstados = new Stack<int>();    //Crear pila de estados
             PilaDeEstados.Push(0);                          //Iniciar pila de estados con 0
@@ -771,6 +771,7 @@ namespace Compiladores_Proyecto_Deanosaurios
                     { 
                         foreach (TreeNode T in Hijos)
                             Arbol.Nodes.Add(T);     // Pasar todos los nodos obtenidos al arbol y representarlos
+                        Arbol.ExpandAll();
                         break;  /* terminó el análisis sintáctico */
                     }
                     else // 4) llamar a la rutina de recuperación de errores;
