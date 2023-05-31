@@ -41,7 +41,6 @@ namespace Compiladores_Proyecto_Deanosaurios
 
             this.Produccion = ". programa";
 
-                //(Luis)
             this.Siguientes = new Dictionary<string, string>
             {
                 {"programa" , "$" },

@@ -78,6 +78,7 @@
             this.label12 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label14 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.dataGridView6 = new System.Windows.Forms.DataGridView();
             this.dataGridView5 = new System.Windows.Forms.DataGridView();
@@ -85,7 +86,21 @@
             this.dataGridView4 = new System.Windows.Forms.DataGridView();
             this.Estado = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.button6 = new System.Windows.Forms.Button();
-            this.label14 = new System.Windows.Forms.Label();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label19 = new System.Windows.Forms.Label();
+            this.Arbol = new System.Windows.Forms.TreeView();
+            this.Errores_Textbox = new System.Windows.Forms.TextBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.BotonFinal = new System.Windows.Forms.Button();
+            this.Tabla_Tokens = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.codigo_Textbox = new System.Windows.Forms.TextBox();
+            this.identificador_Textbox = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.numero_Textbox = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -95,6 +110,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).BeginInit();
+            this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Tabla_Tokens)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -388,6 +405,7 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(12, 61);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -541,6 +559,15 @@
             this.tabPage2.Text = "Análisis sintáctico";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(667, 364);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(91, 13);
+            this.label14.TabIndex = 6;
+            this.label14.Text = "ir_A (No Terminal)";
+            // 
             // label13
             // 
             this.label13.AutoSize = true;
@@ -600,14 +627,148 @@
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
-            // label14
+            // tabPage3
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(667, 364);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(91, 13);
-            this.label14.TabIndex = 6;
-            this.label14.Text = "ir_A (No Terminal)";
+            this.tabPage3.Controls.Add(this.label19);
+            this.tabPage3.Controls.Add(this.Arbol);
+            this.tabPage3.Controls.Add(this.Errores_Textbox);
+            this.tabPage3.Controls.Add(this.label18);
+            this.tabPage3.Controls.Add(this.BotonFinal);
+            this.tabPage3.Controls.Add(this.Tabla_Tokens);
+            this.tabPage3.Controls.Add(this.codigo_Textbox);
+            this.tabPage3.Controls.Add(this.identificador_Textbox);
+            this.tabPage3.Controls.Add(this.label15);
+            this.tabPage3.Controls.Add(this.numero_Textbox);
+            this.tabPage3.Controls.Add(this.label16);
+            this.tabPage3.Controls.Add(this.label17);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(962, 737);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Tiny (Entrega Final)";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Location = new System.Drawing.Point(535, 15);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(219, 13);
+            this.label19.TabIndex = 44;
+            this.label19.Text = "Árbol de análisis sintáctico resultante";
+            // 
+            // Arbol
+            // 
+            this.Arbol.Location = new System.Drawing.Point(315, 50);
+            this.Arbol.Name = "Arbol";
+            this.Arbol.Size = new System.Drawing.Size(641, 681);
+            this.Arbol.TabIndex = 43;
+            // 
+            // Errores_Textbox
+            // 
+            this.Errores_Textbox.ForeColor = System.Drawing.Color.Red;
+            this.Errores_Textbox.Location = new System.Drawing.Point(3, 552);
+            this.Errores_Textbox.Multiline = true;
+            this.Errores_Textbox.Name = "Errores_Textbox";
+            this.Errores_Textbox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.Errores_Textbox.Size = new System.Drawing.Size(306, 179);
+            this.Errores_Textbox.TabIndex = 42;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(128, 535);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(60, 13);
+            this.label18.TabIndex = 41;
+            this.label18.Text = "ERRORES";
+            // 
+            // BotonFinal
+            // 
+            this.BotonFinal.Location = new System.Drawing.Point(6, 227);
+            this.BotonFinal.Name = "BotonFinal";
+            this.BotonFinal.Size = new System.Drawing.Size(300, 23);
+            this.BotonFinal.TabIndex = 40;
+            this.BotonFinal.Text = "Análisis Léxico y Sintáctico del Programa en lenguaje TINY";
+            this.BotonFinal.UseVisualStyleBackColor = true;
+            this.BotonFinal.Click += new System.EventHandler(this.BotonFinal_Click);
+            // 
+            // Tabla_Tokens
+            // 
+            this.Tabla_Tokens.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.Tabla_Tokens.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Tabla_Tokens.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn5,
+            this.dataGridViewTextBoxColumn6});
+            this.Tabla_Tokens.Location = new System.Drawing.Point(3, 256);
+            this.Tabla_Tokens.Name = "Tabla_Tokens";
+            this.Tabla_Tokens.Size = new System.Drawing.Size(306, 276);
+            this.Tabla_Tokens.TabIndex = 33;
+            // 
+            // dataGridViewTextBoxColumn5
+            // 
+            this.dataGridViewTextBoxColumn5.HeaderText = "Nombre";
+            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            this.dataGridViewTextBoxColumn5.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn6
+            // 
+            this.dataGridViewTextBoxColumn6.HeaderText = "Lexema";
+            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            this.dataGridViewTextBoxColumn6.ReadOnly = true;
+            // 
+            // codigo_Textbox
+            // 
+            this.codigo_Textbox.Location = new System.Drawing.Point(6, 50);
+            this.codigo_Textbox.Multiline = true;
+            this.codigo_Textbox.Name = "codigo_Textbox";
+            this.codigo_Textbox.Size = new System.Drawing.Size(303, 171);
+            this.codigo_Textbox.TabIndex = 39;
+            // 
+            // identificador_Textbox
+            // 
+            this.identificador_Textbox.Location = new System.Drawing.Point(79, 7);
+            this.identificador_Textbox.Name = "identificador_Textbox";
+            this.identificador_Textbox.Size = new System.Drawing.Size(77, 20);
+            this.identificador_Textbox.TabIndex = 35;
+            this.identificador_Textbox.Text = "[a-z]+";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(162, 10);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(45, 13);
+            this.label15.TabIndex = 36;
+            this.label15.Text = "número:";
+            // 
+            // numero_Textbox
+            // 
+            this.numero_Textbox.Location = new System.Drawing.Point(213, 8);
+            this.numero_Textbox.Name = "numero_Textbox";
+            this.numero_Textbox.Size = new System.Drawing.Size(81, 20);
+            this.numero_Textbox.TabIndex = 37;
+            this.numero_Textbox.Text = "[0-9]+";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(15, 34);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(141, 13);
+            this.label16.TabIndex = 38;
+            this.label16.Text = "Programa en lenguaje TINY:";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(6, 11);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(67, 13);
+            this.label17.TabIndex = 34;
+            this.label17.Text = "identificador:";
             // 
             // Form1
             // 
@@ -632,6 +793,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).EndInit();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Tabla_Tokens)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -695,6 +859,21 @@
         private System.Windows.Forms.DataGridView dataGridView6;
         private System.Windows.Forms.DataGridView dataGridView5;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TextBox Errores_Textbox;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Button BotonFinal;
+        private System.Windows.Forms.DataGridView Tabla_Tokens;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
+        private System.Windows.Forms.TextBox codigo_Textbox;
+        private System.Windows.Forms.TextBox identificador_Textbox;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox numero_Textbox;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.TreeView Arbol;
+        private System.Windows.Forms.Label label19;
     }
 }
 

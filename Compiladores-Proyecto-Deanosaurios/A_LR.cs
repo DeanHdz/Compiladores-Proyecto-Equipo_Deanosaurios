@@ -50,30 +50,27 @@ namespace Compiladores_Proyecto_Deanosaurios
                 {
                     String Aux = elemento.Encabezado.TrimEnd(' ');
                     elemento.Encabezado = Aux;
-
                     //(DIRIGE / DESPLAZAR)
                     //Inciso A)  Si [ A → α.aβ ] está en Ii e ir_A(Ii , a ) = Ij 
-                    if (elemento.Cuerpo.IndexOf(".") != elemento.Cuerpo.Length - 1)
+                    if (elemento.Cuerpo.IndexOf(".") != elemento.Cuerpo.Length - 1) //Si el punto no se encuentra al final
                     {
-                        int punto = elemento.Cuerpo.IndexOf(".");
-                        int length = elemento.Cuerpo.Length;
-                        String aux = TerminalDespuesDelPunto(elemento.Cuerpo, elemento.Cuerpo.IndexOf("."));
+                        int punto = elemento.Cuerpo.IndexOf("."); int length = elemento.Cuerpo.Length;
+                        String aux = TerminalDespuesDelPunto(elemento.Cuerpo, elemento.Cuerpo.IndexOf(".")); //Verificar Terminal
                         if (aux != null)
                         {
-                            int indiceIrA = -1;
+                            int indexirA = -1;
                             foreach (LR_TransicionD t in estado.Transiciones)
                             {
                                 if (t.S == aux)
-                                    indiceIrA = t.Index_Destado;
+                                    indexirA = t.Index_Destado;
                             }
-                            if (indiceIrA != -1)
+                            if (indexirA != -1)
                             {
                                 int indiceSimbolo = Terminales.IndexOf(aux);
-                                Accion[estado.Index_Estado, Terminales.IndexOf(aux)] = "d" + indiceIrA.ToString(); //Guardar en arreglo accion
+                                Accion[estado.Index_Estado, Terminales.IndexOf(aux)] = "d" + indexirA.ToString(); //Guardar en arreglo accion
                             }
                         }
                     }
-
                     //(REDUCIR)
                     //Inciso B) Si [ A → α. ] está en Ii,
                     if (!elemento.Encabezado.Contains("'") && elemento.Cuerpo.IndexOf(".") == elemento.Cuerpo.Length - 1)
@@ -91,13 +88,14 @@ namespace Compiladores_Proyecto_Deanosaurios
                                 Accion[estado.Index_Estado, Terminales.IndexOf(s)] = "r" + indiceProd.ToString();   //Guardar en arreglo accion
                         }
                     }
-
                     //(ESTADO DE ACEPTACION)
                     //Inciso C) Si [ S’ → S. ] está en Ii entonces, ACCION[ i, $ ] = “aceptar” (ac).
                     if (elemento.Encabezado.Contains("'") && elemento.Cuerpo.IndexOf(".") == elemento.Cuerpo.Length - 1)
                         Accion[estado.Index_Estado, Terminales.Count()] = "ac";     //Guardar en arreglo accion                                           
 
                 }
+
+                // MANEJO DE LA TABLA IR_A, simplemente es verificar si existe una transicion, en caso de ello simplemente marcarlo
                 foreach (LR_TransicionD tD in estado.Transiciones)
                 {
                     if (NoTerminales.Contains(tD.S))
@@ -106,6 +104,7 @@ namespace Compiladores_Proyecto_Deanosaurios
             }
         }
 
+        //Para regla 1, Verificacion terminal
         public String TerminalDespuesDelPunto(String elemento, int index)
         {
             foreach (String s in this.Terminales)
@@ -114,16 +113,16 @@ namespace Compiladores_Proyecto_Deanosaurios
             return null;
         }
 
-        public int Produccion_Indice(String produccionBus)
+        public int Produccion_Indice(String prod_string)
         {
             int aux = 0;
-            foreach (KeyValuePair<String, String> EntradaD in this.Gramatica)
+            foreach (KeyValuePair<String, String> ED in this.Gramatica)
             {
-                String[] ArregloCadenas = EntradaD.Value.Split('|');
-                foreach (String c in ArregloCadenas)
+                String[] strings = ED.Value.Split('|');
+                foreach (String c in strings)
                 {
                     aux++;
-                    if (produccionBus == c)
+                    if (prod_string == c)
                         return aux;
                 }
             }
@@ -268,6 +267,43 @@ namespace Compiladores_Proyecto_Deanosaurios
                 Resultado = CERRADURA(ProduccionesCambiadas);
             }
             return Resultado;
+        }
+
+        public string ObtenPadreProduccion(int IndiceProduccion)
+        {
+            string res = "";
+            int aux = 0;
+            foreach (KeyValuePair<string, string> EntradaD in Gramatica)
+            {
+                string[] ArregloCadenas = EntradaD.Value.Split('|'); // Divide la cadena | y regresa el padre
+                foreach (string c in ArregloCadenas)
+                {
+                    aux++;
+                    if (aux == IndiceProduccion)
+                        return EntradaD.Key;
+                }
+            }
+            return res;
+        }
+
+        public int CantidadSimbolos_Beta(int IndiceProduccion)
+        {
+            int cant_simbolos = -1;
+            int aux = 0;
+            foreach (KeyValuePair<string, string> EntradaD in Gramatica)
+            {
+                string[] ArregloCadenas = EntradaD.Value.Split('|');
+                foreach (string c in ArregloCadenas)
+                {
+                    aux++;
+                    if (aux == IndiceProduccion)
+                    {
+                        string[] CadenaProduccion = c.Split();
+                        return CadenaProduccion.Length;
+                    }
+                }
+            }
+            return cant_simbolos;
         }
 
     }

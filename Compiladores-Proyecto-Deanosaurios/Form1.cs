@@ -6,7 +6,9 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Security;
+using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -618,8 +620,217 @@ namespace Compiladores_Proyecto_Deanosaurios
             /************************** FIN AVANCE 7 ********************************/
 
         }
+        #endregion
+
+        #region EntregaFinal
+
+        //Copiado y pegado de la entrega 5
+        private List<String> AnalizadorLexicoTINY_Entrega5(AFD AFD_Identificador, AFD AFD_Numero)
+        {
+            List<String> Code = new List<String>(); //Retornar programa para analisis sintactico
+            int Line = 0; //Linea actual al imprimir en grid
+
+            for (int i = 0; i < codigo_Textbox.Lines.Length; i++)
+            {
+                // Leer linea por linea textbox y separar codigo
+                string Trim = codigo_Textbox.Lines[i].Trim();
+                String[] lineArr = Trim.Split(' ');
+                foreach (string s in lineArr)
+                {
+                    // Leer cada renglon e identificar el codigo 
+
+                    // Identificar renglon vacio
+                    if (s == null || s == "") { Line--; }//Hacer nada, contrarestar recorrimiento de linea en tabla
+                                                         // Prueba palabra reservada
+                    else if (PalabrasReservadas.Contains(s))
+                    {
+                        Tabla_Tokens.Rows.Add(s, s);
+                        Code.Add(s);
+                    }
+                    // Prueba Simbolo especial
+                    else if (SimbolosEspeciales.Contains(s))
+                    {
+                        Tabla_Tokens.Rows.Add(s, s);
+                        Code.Add(s);
+                    }
+                    // prueba AFD Numero
+                    else if (AFD_Numero.lexemaValido(s, AFD_Numero.dEstados[0]))
+                    {
+                        Tabla_Tokens.Rows.Add("número", s);
+                        Code.Add("numero");
+                    }
+                    // Prueba AFD Identificador
+                    else if (AFD_Identificador.lexemaValido(s, AFD_Identificador.dEstados[0]))
+                    {
+                        Tabla_Tokens.Rows.Add("ídentificador", s);
+                        Code.Add("identificador");
+                    }
+                    // Error lexico
+                    else if (s != "")
+                    {
+                        Tabla_Tokens.Rows.Add("Error Léxico", s);
+                            Errores_Textbox.Text += "Linea " + (i+1).ToString() + ". " + s + " no se reconoce." + Environment.NewLine;
+                        Tabla_Tokens.Rows[Line].Cells[0].Style.ForeColor = Color.Red;
+                        Tabla_Tokens.Rows[Line].Cells[1].Style.ForeColor = Color.Red;
+                    }
+                    Line++;
+                }
+            }
+            Code.Add("$"); //Agregar el delimitador de entrada para analisis sintactico
+            return Code;
+        }
+
+        //Copiado y pegado de la entrega 6-7
+        private A_LR CrearLR_Entrega6y7()
+        {
+            GramTINY g = new GramTINY(); //Al usar el constructor default ya se hace el LR
+            g.Afd_lr.CrearTablaDeAnalisis(g.Siguientes); //A partir del LR se hace la tabla de analisis con siguientes (Hacer ir_a y Accion)
+            return g.Afd_lr; //Retornar el LR completo
+        }
+
+        //Se procede con el analizador sintactico si no se hallan errores lexicos
+        private void AnalizadorSintacticoTINY(A_LR LR, List<String> w)
+        {
+            // ENTRADA: Una cadena de entrada w y una tabla de análisis sintáctico LR con las funciones ACCION e ir_A, para una gramática G.
+
+            /** Limpiar y preparar Area de Trabajo **/
+            //Dejar arbol sintactico en blanco
+            Arbol.Nodes.Clear(); Arbol.Refresh();           //Quitar nodos y redibujar
+            //Inicializar estructuras
+            Stack<int> PilaDeEstados = new Stack<int>();    //Crear pila de estados
+            PilaDeEstados.Push(0);                          //Iniciar pila de estados con 0
+            List<TreeNode> Hijos = new List<TreeNode>();
 
 
+            // MÉTODO: Al principio, el analizador sintáctico tiene s0 en su pila, en donde s0 es el estado inicial y w$ está en el búfer de entrada.
+            /** Algoritmo del PDF **/
+
+            int a = 0; // hacer que "a" sea el primer símbolo de w$;
+            while (true)  /* repetir indefinidamente */
+            {
+                int s = PilaDeEstados.Peek();   // hacer que "s" sea el estado en la parte superior de la pila;
+                string simbolo = w[a];          //"a" apunta al simbolo correspondiente en w
+
+                int Nodoactual_index = Hijos.Count;
+                int simbolo_index = -1; //Por default se considera que no encuentra el simbolo en la tabla
+
+                //Buscar la posicion de columna que ocupa el simbolo en la tabla
+                if (LR.Terminales.Contains(simbolo))
+                    simbolo_index = LR.Terminales.IndexOf(simbolo);     //Posicion del simbolo en tabla ACCION
+                else if (simbolo == "$")
+                    simbolo_index = LR.Terminales.Count;                //En la tabla ACCION siempre ocupa la ultima posicion el simbolo "$"
+
+
+                if (simbolo_index != -1) //No busco el simbolo en la tabla
+                {
+                    // 1) if (ACCION[s, a] = desplazar t)
+                    if (LR.Accion[s,simbolo_index].Contains("d"))
+                    { 
+                        string EstadoDesplazar = LR.Accion[s, simbolo_index]; // Realiza ACCION de estado con el simbolo evaluado
+                        int estado_inicio = EstadoDesplazar.IndexOf("d") + 1; // Determinar "t" despues del d de "desplazar"
+                        int Estado = int.Parse(EstadoDesplazar.Substring(estado_inicio).ToString()); //Rescatar el numero de estado partiendo de su indice
+                        PilaDeEstados.Push(Estado); //meter estado "t" en la pila;
+                        TreeNode nodo = new TreeNode(); //Crear y agregar nodo
+                        nodo.Text = simbolo;
+                        Hijos.Add(nodo);
+                        a++; //hacer que "a" sea el siguiente símbolo de entrada;
+                    }
+                    // 2) else if (ACCION[s, a] = reducir A->β)
+                    else if (LR.Accion[s,simbolo_index].Contains("r"))
+                    { 
+                        string rEstado = LR.Accion[s,simbolo_index]; // ACCION[s, a]
+                        int indexR = rEstado.IndexOf("r")+1; // Clasificacion
+                        int Estado = int.Parse(rEstado.Substring(indexR).ToString());
+                        int BetaLength = LR.CantidadSimbolos_Beta(Estado);  //Tamaño de Beta
+
+                        for (int i = 0; i < BetaLength; i++)
+                            PilaDeEstados.Pop(); // retira elementos de la pila dependiendo del tamaño del cuerpo de la produccion
+
+                        s = PilaDeEstados.Peek(); // Apunta al tope de la pila
+                        string Padre = LR.ObtenPadreProduccion(Estado);
+                        PilaDeEstados.Push(int.Parse(LR.ir_a[s, LR.NoTerminales.IndexOf(Padre)])); // Agregar el resultado de ir_A[t,A] a la PILA
+ 
+                        List<TreeNode> nodos = new List<TreeNode>();
+                        List<int> indexAux = new List<int>();
+                        for (int i = Nodoactual_index - BetaLength; i < Nodoactual_index; i++)
+                        {
+                            nodos.Add(Hijos[i]);
+                            indexAux.Add(i);
+                        }
+                        indexAux.Sort(); indexAux.Reverse();                            // Ordenar los indices para borrar datos innecesarios
+                        foreach (int i in indexAux)                                      // Remover nodos repetidos
+                            Hijos.RemoveAt(i);
+                        TreeNode NodoPadre = new TreeNode(Padre);                        // Guardar hijos en padre
+                        foreach (TreeNode T in nodos)
+                            NodoPadre.Nodes.Add(T);
+
+                        Hijos.Add(NodoPadre);
+                    }
+                    // 3) else if(ACCION[s,a] = aceptar )
+                    else if (LR.Accion[s,simbolo_index] == "ac")
+                    { 
+                        foreach (TreeNode T in Hijos)
+                            Arbol.Nodes.Add(T);     // Pasar todos los nodos obtenidos al arbol y representarlos
+                        break;  /* terminó el análisis sintáctico */
+                    }
+                    else // 4) llamar a la rutina de recuperación de errores;
+                    {
+                        Errores_Textbox.Text = "Error sintáctico";
+                        break; /* terminó el análisis sintáctico */
+                    }
+                } //while
+            }
+        }
+
+        private void BotonFinal_Click(object sender, EventArgs e)
+        {
+            //Clasificar tokens, si no hay errores hace el arbol.
+            try
+            {
+                if (identificador_Textbox.Text != "" && numero_Textbox.Text != "" && codigo_Textbox.Text != "")
+                {
+                    /** Limpiar Area de trabajo **/
+                    //Reiniciar Tabla de Tokens, arbol y Campo de Error
+                    Tabla_Tokens.Rows.Clear();
+                    Arbol.Nodes.Clear(); Arbol.Refresh();
+                    Errores_Textbox.Text = "";
+
+                    /** Crear AFNs / AFDs **/
+                    //AFN/AFD identificador
+                    String identificador_posfija = ConvPosfija(identificador_Textbox.Text); //Posfija del identificador
+                    AFN AFN_identificador = new AFN();                                      //Crear AFN
+                    AFN_identificador.conviertePosfijaEnAFN(identificador_posfija);         //Inicializar AFN
+                    AFD AFD_identificador = new AFD();                                      //Crear AFD
+                    AFD_identificador.construyeAFD(AFN_identificador);                      //Inicializar AFD
+
+                    //AFN/AFD numero
+                    String numero_posfija = ConvPosfija(numero_Textbox.Text);               //Posfija del numero
+                    AFN AFN_numero = new AFN();                                             //Crear AFN
+                    AFN_numero.conviertePosfijaEnAFN(numero_posfija);                       //Inicializar AFN
+                    AFD AFD_numero = new AFD();                                             //Crear AFD
+                    AFD_numero.construyeAFD(AFN_numero);                                    //Inicializar AFD
+
+                    /** Analizador de Tokens TINY (COPIAR Y PEGAR ENTREGA 5) **/
+                    //Entrega 5 copiado y pegado.
+                    List<String> Programa = AnalizadorLexicoTINY_Entrega5(AFD_identificador, AFD_numero);
+
+                    /** Analizador sintactico TINY (ENTREGA FINAL) **/ 
+                    //Si no se marcan errores, procede con el analizador sintactico
+                    if(Errores_Textbox.Text == "")          //Si se mantuvo vacio se inicia el analisis sintactico
+                    {
+                        A_LR LR = CrearLR_Entrega6y7();     //Entrega 6-7 copiado y pegado.
+                        AnalizadorSintacticoTINY(LR,Programa);  //Entrega 8 arbol.
+                    }
+                }
+                else
+                    MessageBox.Show("Uno de los campos no ha sido rellenado");
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
+        #endregion
     }
-    #endregion
 }
